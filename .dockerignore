@@ -1,0 +1,4 @@
+.git
+vendor
+docs
+.phpunit.cache
