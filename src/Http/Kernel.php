@@ -5,7 +5,9 @@ namespace App\Http;
 
 use App\Categorisation\RuleBasedCategoriser;
 use App\Db\Connection;
+use App\Http\Handlers\GetTransaction;
 use App\Http\Handlers\Health;
+use App\Http\Handlers\ListTransactions;
 use App\Http\Handlers\SubmitTransaction;
 use App\Transactions\TransactionRepository;
 use App\Transactions\TransactionValidator;
@@ -28,6 +30,8 @@ final class Kernel
         $this->router = new Router();
         $this->router->add('GET', '/health', new Health($connection));
         $this->router->add('POST', '/transactions', new SubmitTransaction($validator, $categoriser, $repository));
+        $this->router->add('GET', '/transactions', new ListTransactions($repository));
+        $this->router->add('GET', '/transactions/{id}', new GetTransaction($repository));
     }
 
     public static function fromEnv(): self

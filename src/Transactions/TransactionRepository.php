@@ -16,6 +16,8 @@ use PDOException;
  * insert() mints the id and writes the transaction and its categorisation in
  * one statement; the unique key on `reference` is what turns a repeated
  * submission into a DuplicateReferenceException rather than a second row.
+ * find() and list() read rows back into Transaction objects; list() is
+ * newest first with an optional category and a caller-supplied cap.
  */
 final class TransactionRepository
 {
@@ -75,6 +77,31 @@ final class TransactionRepository
         }
 
         return $transaction;
+    }
+
+    public function find(string $id): ?Transaction
+    {
+        $statement = $this->connection->pdo()->prepare('SELECT * FROM transactions WHERE id = :id');
+        $statement->execute(['id' => $id]);
+        $row = $statement->fetch();
+
+        return $row === false ? null : Transaction::fromRow($row);
+    }
+
+    /**
+     * Newest first, optionally one category, never more than $limit rows.
+     *
+     * @return list<Transaction>
+     */
+    public function list(?Category $category, int $limit): array
+    {
+        $sql = 'SELECT * FROM transactions'
+            . ($category === null ? '' : ' WHERE category = :category')
+            . ' ORDER BY created_at DESC, id DESC LIMIT ' . max(1, $limit);
+        $statement = $this->connection->pdo()->prepare($sql);
+        $statement->execute($category === null ? [] : ['category' => $category->value]);
+
+        return array_map(Transaction::fromRow(...), $statement->fetchAll());
     }
 
     private static function stored(\DateTimeImmutable $at): string

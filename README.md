@@ -34,4 +34,4 @@ docker compose run --rm php vendor/bin/phpunit
 
 ## Status
 
-Step 4 of 8: `POST /transactions` validates, categorises and stores, answering 201 or 409. Retrieval is next.
+Step 5 of 8: all three endpoints work: POST, GET by id, GET list with a category filter. The front-end page is next.

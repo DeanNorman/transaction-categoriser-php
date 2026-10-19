@@ -16,10 +16,15 @@ final class Response
     ) {
     }
 
-    /** @param mixed $data */
-    public static function ok(mixed $data, int $status = 200): self
+    /** @param array<string,mixed>|null $meta */
+    public static function ok(mixed $data, int $status = 200, ?array $meta = null): self
     {
-        return new self($status, ['data' => $data]);
+        $body = ['data' => $data];
+        if ($meta !== null) {
+            $body['meta'] = $meta;
+        }
+
+        return new self($status, $body);
     }
 
     /** @param array<string,string>|null $fields */
