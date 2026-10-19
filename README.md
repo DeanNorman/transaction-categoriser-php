@@ -6,6 +6,8 @@ One transaction is `POST`ed, placed in one of ten predefined categories by a rul
 
 The repository is written as that journey: **eight steps, eight commits, eight documents** under [docs/journey](docs/journey/). Each says what the transaction has become, what the code does, what was decided and why.
 
+**The deck:** [slides as a PDF](docs/sous-practice/transaction-categoriser.pdf) · [present in the browser](https://deannorman.github.io/transaction-categoriser-php/sous-practice/transaction-categoriser.html) · [source and notes](docs/sous-practice/)
+
 ## Run it
 
 Requirements: Docker with Compose v2. Nothing else on the host.
@@ -54,7 +56,7 @@ scripts/smoke.sh                                                      # 14 reque
 | What was traded off, and what comes next? | [docs/trade-offs.md](docs/trade-offs.md), [docs/adr](docs/adr/) |
 | How was the AI coding tool used? | [docs/journey/08-documentation.md](docs/journey/08-documentation.md), [docs/prompts/00-design-interview.md](docs/prompts/00-design-interview.md) |
 | What do the words mean? | [CONTEXT.md](CONTEXT.md) |
-| Slides for presenting this in the interview? | [docs/sous-practice](docs/sous-practice/) (Marp source with speaker notes, PDF, HTML) |
+| The slides? | [docs/sous-practice](docs/sous-practice/): [PDF](docs/sous-practice/transaction-categoriser.pdf), [presentable HTML](https://deannorman.github.io/transaction-categoriser-php/sous-practice/transaction-categoriser.html), source with speaker notes |
 
 ## The shape of the code
 
