@@ -34,4 +34,4 @@ docker compose run --rm php vendor/bin/phpunit
 
 ## Status
 
-Step 6 of 8: the API is complete and a static page at http://localhost:8090 walks the journey in a browser. Integration tests are next.
+Step 7 of 8: unit and integration suites pass inside the stack, and scripts/smoke.sh walks the journey through nginx. Documentation close-out is next.
