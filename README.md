@@ -34,4 +34,4 @@ docker compose run --rm php vendor/bin/phpunit
 
 ## Status
 
-Step 3 of 8: the stack runs, `POST /transactions` validates and categorises its body. Storage is next.
+Step 4 of 8: `POST /transactions` validates, categorises and stores, answering 201 or 409. Retrieval is next.

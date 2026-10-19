@@ -7,8 +7,8 @@ use App\Categorisation\RuleBasedCategoriser;
 use App\Db\Connection;
 use App\Http\Handlers\Health;
 use App\Http\Handlers\SubmitTransaction;
+use App\Transactions\TransactionRepository;
 use App\Transactions\TransactionValidator;
-use PDO;
 
 /**
  * Wires the routes to their handlers and turns any uncaught failure into a
@@ -19,17 +19,20 @@ final class Kernel
 {
     private Router $router;
 
-    /** @param callable(): PDO $connect */
-    public function __construct(private $connect)
+    public function __construct(Connection $connection)
     {
+        $validator = new TransactionValidator();
+        $categoriser = RuleBasedCategoriser::withDefaultRules();
+        $repository = new TransactionRepository($connection);
+
         $this->router = new Router();
-        $this->router->add('GET', '/health', new Health($this->connect));
-        $this->router->add('POST', '/transactions', new SubmitTransaction(new TransactionValidator(), RuleBasedCategoriser::withDefaultRules()));
+        $this->router->add('GET', '/health', new Health($connection));
+        $this->router->add('POST', '/transactions', new SubmitTransaction($validator, $categoriser, $repository));
     }
 
     public static function fromEnv(): self
     {
-        return new self(static fn (): PDO => Connection::fromEnv());
+        return new self(Connection::fromEnv());
     }
 
     public function handle(Request $request): Response

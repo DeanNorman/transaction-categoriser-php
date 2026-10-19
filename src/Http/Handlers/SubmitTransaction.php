@@ -3,22 +3,25 @@ declare(strict_types=1);
 
 namespace App\Http\Handlers;
 
+use App\Categorisation\Categoriser;
 use App\Http\Request;
 use App\Http\Response;
-use App\Categorisation\Categoriser;
+use App\Transactions\DuplicateReferenceException;
+use App\Transactions\TransactionRepository;
 use App\Transactions\TransactionValidator;
 use App\Transactions\ValidationException;
 
 /**
- * POST /transactions. Steps 2 and 3: the request is parsed, validated and
- * categorised. Persistence (step 4) is not here yet, so a valid submission is
- * answered with 501 that names the category it would have been stored with.
+ * POST /transactions: parse, validate, categorise, store, answer 201 with the
+ * stored transaction. The whole journey of a single submission is these
+ * four calls, in this order.
  */
 final class SubmitTransaction
 {
     public function __construct(
         private readonly TransactionValidator $validator,
         private readonly Categoriser $categoriser,
+        private readonly TransactionRepository $repository,
     ) {
     }
 
@@ -40,11 +43,12 @@ final class SubmitTransaction
 
         $categorisation = $this->categoriser->categorise($input->description);
 
-        return Response::error(501, 'not_implemented', sprintf(
-            'Transaction "%s" is valid and would be categorised as %s (source: %s); storage arrives in step 4',
-            $input->description,
-            $categorisation->category->value,
-            $categorisation->source,
-        ));
+        try {
+            $transaction = $this->repository->insert($input, $categorisation);
+        } catch (DuplicateReferenceException $e) {
+            return Response::error(409, 'duplicate_reference', $e->getMessage(), ['reference' => 'already exists']);
+        }
+
+        return Response::ok($transaction->toArray(), 201);
     }
 }
