@@ -34,4 +34,4 @@ docker compose run --rm php vendor/bin/phpunit
 
 ## Status
 
-Step 1 of 8: the stack runs and answers `/health`. The remaining steps are added commit by commit.
+Step 2 of 8: the stack runs, `POST /transactions` validates its body. Categorisation and storage are next.
