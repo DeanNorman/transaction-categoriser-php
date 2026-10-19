@@ -54,6 +54,7 @@ scripts/smoke.sh                                                      # 14 reque
 | What was traded off, and what comes next? | [docs/trade-offs.md](docs/trade-offs.md), [docs/adr](docs/adr/) |
 | How was the AI coding tool used? | [docs/journey/08-documentation.md](docs/journey/08-documentation.md), [docs/prompts/00-design-interview.md](docs/prompts/00-design-interview.md) |
 | What do the words mean? | [CONTEXT.md](CONTEXT.md) |
+| Slides for presenting this in the interview? | [docs/sous-practice](docs/sous-practice/) (Marp source with speaker notes, PDF, HTML) |
 
 ## The shape of the code
 
