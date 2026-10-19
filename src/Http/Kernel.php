@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http;
 
+use App\Categorisation\RuleBasedCategoriser;
 use App\Db\Connection;
 use App\Http\Handlers\Health;
 use App\Http\Handlers\SubmitTransaction;
@@ -23,7 +24,7 @@ final class Kernel
     {
         $this->router = new Router();
         $this->router->add('GET', '/health', new Health($this->connect));
-        $this->router->add('POST', '/transactions', new SubmitTransaction(new TransactionValidator()));
+        $this->router->add('POST', '/transactions', new SubmitTransaction(new TransactionValidator(), RuleBasedCategoriser::withDefaultRules()));
     }
 
     public static function fromEnv(): self

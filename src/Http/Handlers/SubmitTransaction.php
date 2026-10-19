@@ -5,18 +5,21 @@ namespace App\Http\Handlers;
 
 use App\Http\Request;
 use App\Http\Response;
+use App\Categorisation\Categoriser;
 use App\Transactions\TransactionValidator;
 use App\Transactions\ValidationException;
 
 /**
- * POST /transactions. Step 2: the request is parsed and validated.
- * Categorisation (step 3) and persistence (step 4) are not here yet, so a
- * valid submission is answered with 501 until they are.
+ * POST /transactions. Steps 2 and 3: the request is parsed, validated and
+ * categorised. Persistence (step 4) is not here yet, so a valid submission is
+ * answered with 501 that names the category it would have been stored with.
  */
 final class SubmitTransaction
 {
-    public function __construct(private readonly TransactionValidator $validator)
-    {
+    public function __construct(
+        private readonly TransactionValidator $validator,
+        private readonly Categoriser $categoriser,
+    ) {
     }
 
     /** @param array<string,string> $params */
@@ -35,9 +38,13 @@ final class SubmitTransaction
             return Response::error(422, 'validation_failed', 'One or more fields are invalid', $e->fields);
         }
 
+        $categorisation = $this->categoriser->categorise($input->description);
+
         return Response::error(501, 'not_implemented', sprintf(
-            'Transaction "%s" is valid; categorisation and storage arrive in the next steps',
+            'Transaction "%s" is valid and would be categorised as %s (source: %s); storage arrives in step 4',
             $input->description,
+            $categorisation->category->value,
+            $categorisation->source,
         ));
     }
 }
