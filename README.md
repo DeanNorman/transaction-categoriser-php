@@ -34,4 +34,4 @@ docker compose run --rm php vendor/bin/phpunit
 
 ## Status
 
-Step 5 of 8: all three endpoints work: POST, GET by id, GET list with a category filter. The front-end page is next.
+Step 6 of 8: the API is complete and a static page at http://localhost:8090 walks the journey in a browser. Integration tests are next.

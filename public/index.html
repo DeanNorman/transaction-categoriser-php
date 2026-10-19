@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transaction Categoriser</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="masthead">
+  <h1>Transaction Categoriser</h1>
+  <p class="lede">One transaction goes in, comes back categorised, and can be read again. The three panels below are the three endpoints.</p>
+  <p class="health" id="health" aria-live="polite">Checking the API…</p>
+</header>
+
+<main class="panels">
+  <section class="panel" aria-labelledby="submit-heading">
+    <h2 id="submit-heading"><span class="method post">POST</span> /transactions</h2>
+    <form id="submit-form" novalidate>
+      <label>Description <input name="description" required maxlength="255" placeholder="Albert Heijn Purchase" value="Albert Heijn Purchase"></label>
+      <div class="row">
+        <label>Amount <input name="amount" required inputmode="decimal" placeholder="-87.18" value="-42.60"></label>
+        <label>Type
+          <select name="type"><option value="debit">debit</option><option value="credit">credit</option></select>
+        </label>
+      </div>
+      <label>Timestamp <input name="timestamp" required placeholder="2024-05-16 07:22:18" value="2024-05-16 07:22:18"></label>
+      <div class="row">
+        <label>Account number <input name="account_number" required maxlength="34" placeholder="NLINGB1944573686" value="NLINGB1944573686"></label>
+        <label>Reference <small>(optional)</small> <input name="reference" maxlength="64" placeholder="TXN00001"></label>
+      </div>
+      <div class="actions">
+        <button type="submit">Submit transaction</button>
+        <button type="button" class="secondary" id="fill-sample">Fill with a sample row</button>
+      </div>
+    </form>
+    <div id="submit-result" class="result" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="list-heading">
+    <h2 id="list-heading"><span class="method get">GET</span> /transactions</h2>
+    <form id="list-form" class="toolbar">
+      <label>Category
+        <select name="category" id="category-filter"><option value="">All</option></select>
+      </label>
+      <button type="submit" class="secondary">Refresh</button>
+      <span id="list-meta" class="meta"></span>
+    </form>
+    <table id="list" class="list">
+      <thead><tr><th>Description</th><th>Category</th><th class="num">Amount</th><th>Type</th><th>Reference</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="list-empty" class="empty" hidden>Nothing stored yet. Submit a transaction on the left.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="detail-heading">
+    <h2 id="detail-heading"><span class="method get">GET</span> /transactions/{id}</h2>
+    <form id="detail-form" class="toolbar">
+      <label>Id <input name="id" id="detail-id" placeholder="paste or click a row"></label>
+      <button type="submit" class="secondary">Fetch</button>
+    </form>
+    <div id="detail-result" class="result" aria-live="polite"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Every response shown is the raw JSON from the API. The journey of one transaction is documented step by step in <code>docs/journey/</code>.</p>
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>
